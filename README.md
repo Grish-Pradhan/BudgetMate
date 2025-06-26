@@ -93,7 +93,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
-Created by [Your Name](https://github.com/yourusername) – feel free to reach out!
+Created by Grish Pradhan (https://github.com/Grish-Pradhan) – feel free to reach out!
 
 ```
 
