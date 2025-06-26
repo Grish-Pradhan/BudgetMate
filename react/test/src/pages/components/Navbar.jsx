@@ -28,7 +28,6 @@ const Navbar = () => {
           <Link to="/" className="text-gray-700 hover:text-amber-600 transition-colors">Home</Link>
           <Link to="/register" className="text-gray-700 hover:text-amber-600 transition-colors">Register</Link>
           <Link to="/login" className="text-gray-700 hover:text-amber-600 transition-colors">Login</Link>
-          <Link to="/dashboard" className="text-gray-700 hover:text-amber-600 transition-colors">Dashboard</Link>
           <Link to="/contact" className="text-gray-700 hover:text-amber-600 transition-colors">Contact</Link>
           <Link to="/about" className="text-gray-700 hover:text-amber-600 transition-colors">About</Link>
         </div>
