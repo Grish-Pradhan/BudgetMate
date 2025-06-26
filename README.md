@@ -98,5 +98,4 @@ Created by Grish Pradhan (https://github.com/Grish-Pradhan) – feel free to rea
 ```
 
 Just replace `yourusername`, environment variables, and any URLs with your actual info.  
-Would you like me to help generate a LICENSE file too?
 ```
