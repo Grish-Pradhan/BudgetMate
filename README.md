@@ -1,4 +1,3 @@
-Here’s a concise and well-structured **README.md** file for your BudgetMate project tailored for GitHub:
 
 ````markdown
 # BudgetMate
@@ -11,10 +10,11 @@ Here’s a concise and well-structured **README.md** file for your BudgetMate pr
 
 - User registration and authentication  
 - Add, edit, and delete income and expenses  
-- Monthly budgeting and spending limits  
 - Interactive charts and reports  
 - Dark mode support  
-- Responsive design for mobile and desktop  
+- Responsive design for mobile and desktop
+- Interactive UI
+
 
 ---
 
@@ -25,7 +25,7 @@ Here’s a concise and well-structured **README.md** file for your BudgetMate pr
 - React Router  
 - Axios  
 - Node.js & Express (backend)  
-- MongoDB (or your database)  
+- MYSQL (or your database)  
 - JWT Authentication  
 - React Toastify for notifications  
 
@@ -37,7 +37,7 @@ Here’s a concise and well-structured **README.md** file for your BudgetMate pr
 
 - Node.js (v14 or later)  
 - npm or yarn  
-- MongoDB instance (local or cloud)  
+- MYSQL
 
 ### Installation
 
@@ -58,7 +58,7 @@ Here’s a concise and well-structured **README.md** file for your BudgetMate pr
 
    ```
    REACT_APP_API_URL=http://localhost:5000
-   MONGO_URI=your_mongo_connection_string
+   MYSQL_URI=your_MYSQL_connection_string
    JWT_SECRET=your_jwt_secret
    ```
 
