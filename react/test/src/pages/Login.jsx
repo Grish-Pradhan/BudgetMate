@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { loginUserApi } from '../api/Api'; // Replace with your actual API path
-import { useNavigate } from 'react-router-dom'; // ✅ For redirecting
+import { loginUserApi } from '../api/Api';
+import { useNavigate } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -31,7 +32,17 @@ function Login() {
       if (response?.data?.token) {
         localStorage.setItem('token', response.data.token);
         toast.success('Login successful!');
-        navigate('/dashboard'); // ✅ Redirect to dashboard
+
+        const decoded = jwtDecode(response.data.token);
+
+        // Redirect based on role
+        setTimeout(() => {
+          if (decoded.role === 'admin') {
+            navigate('/admin-dashboard');
+          } else {
+            navigate('/dashboard');
+          }
+        }, 1000);
       } else {
         toast.error('Login failed. Please check your credentials.');
       }
@@ -93,7 +104,7 @@ function Login() {
           }`}
           disabled={loading}
           required
-          minLength={5} // ✅ Minimum password length set to 5
+          minLength={5}
         />
 
         <button

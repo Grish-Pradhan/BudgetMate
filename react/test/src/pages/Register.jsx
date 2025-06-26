@@ -2,7 +2,7 @@ import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { createUserApi } from '../api/Api';
-import { useNavigate } from 'react-router-dom';  // <-- Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 function Register() {
   const [name, setName] = React.useState('');
@@ -10,7 +10,7 @@ function Register() {
   const [password, setPassword] = React.useState('');
   const [darkMode, setDarkMode] = React.useState(() => localStorage.getItem('darkMode') === 'true');
   const [loading, setLoading] = React.useState(false);
-  const navigate = useNavigate();  // <-- Initialize navigate
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     localStorage.setItem('darkMode', darkMode);
@@ -27,12 +27,11 @@ function Register() {
     }
     setLoading(true);
     try {
-      const data = { name, email, password };
+      const data = { name, email, password, role: 'user' }; // role always 'user'
       const response = await createUserApi(data);
 
       if (response?.data?.message) {
         toast.success(response.data.message);
-        // Redirect after short delay to show toast
         setTimeout(() => {
           navigate('/login');
         }, 1500);
@@ -53,7 +52,6 @@ function Register() {
         darkMode ? 'bg-gray-900 text-gray-200' : 'bg-gray-100 text-gray-900'
       }`}
     >
-      {/* Dark Mode Toggle */}
       <button
         onClick={() => setDarkMode((prev) => !prev)}
         className={`fixed top-4 right-4 z-50 px-4 py-2 rounded-md border transition font-semibold shadow ${
@@ -65,7 +63,6 @@ function Register() {
         {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
       </button>
 
-      {/* Register Form */}
       <form
         onSubmit={submit}
         className={`flex flex-col gap-4 w-full max-w-md p-8 rounded-lg shadow-md transition-colors duration-300 ${
@@ -111,6 +108,7 @@ function Register() {
           required
           minLength={5}
         />
+
         <button
           type="submit"
           disabled={loading}

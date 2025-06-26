@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 // Register new user
 const createUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   // Validate required fields
   if (!name || !email || !password) {
@@ -21,16 +21,21 @@ const createUser = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Validate or assign role (you can make this stricter or admin-only if needed)
+    const allowedRoles = ['user', 'admin'];
+    const assignedRole = allowedRoles.includes(role) ? role : 'user';
+
     // Create user in database
     const newUser = await User.create({
       name,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      role: assignedRole,
     });
 
     res.status(201).json({
       message: 'User created successfully',
-      user: { name: newUser.name, email: newUser.email }
+      user: { name: newUser.name, email: newUser.email, role: newUser.role },
     });
   } catch (error) {
     console.error('Error creating user:', error);
@@ -42,7 +47,7 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  // Validate
+  // Validate input
   if (!email || !password) {
     return res.status(400).json({ message: 'Email and password are required' });
   }
@@ -53,19 +58,28 @@ const loginUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Verify password
+    // Compare password
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
       return res.status(401).json({ message: 'Invalid password' });
     }
 
-    // Sign JWT token
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    // Generate JWT
+    const token = jwt.sign(
+      { id: user.id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
 
     res.status(200).json({
       message: 'Login successful',
       token,
-      user: { name: user.name, email: user.email }
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     });
   } catch (error) {
     console.error('Error logging in:', error);
@@ -73,12 +87,12 @@ const loginUser = async (req, res) => {
   }
 };
 
-// Logout user (stateless JWT, so client deletes token)
+// Logout user (client should clear token)
 const logoutUser = (_req, res) => {
   res.status(200).json({ message: 'Logged out successfully' });
 };
 
-// Delete user by id
+// Delete user by ID
 const deleteUser = async (req, res) => {
   const { id } = req.params;
 
@@ -87,6 +101,7 @@ const deleteUser = async (req, res) => {
     if (!deleted) {
       return res.status(404).json({ message: 'User not found or already deleted' });
     }
+
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
     console.error('Error deleting user:', error);
@@ -94,4 +109,9 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { createUser, loginUser, logoutUser, deleteUser };
+module.exports = {
+  createUser,
+  loginUser,
+  logoutUser,
+  deleteUser,
+};

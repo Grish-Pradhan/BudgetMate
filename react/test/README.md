@@ -1,12 +1,101 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+````markdown
+# BudgetMate
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**BudgetMate** is a personal finance management web application designed to help users track their income, expenses, and budgets with ease. It provides an intuitive dashboard, transaction management, and insightful reports to empower better financial decisions.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Features
+
+- User registration and authentication  
+- Add, edit, and delete income and expenses  
+- Monthly budgeting and spending limits  
+- Interactive charts and reports  
+- Dark mode support  
+- Responsive design for mobile and desktop  
+
+---
+
+## Technologies
+
+- React  
+- Tailwind CSS  
+- React Router  
+- Axios  
+- Node.js & Express (backend)  
+- MongoDB (or your database)  
+- JWT Authentication  
+- React Toastify for notifications  
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or later)  
+- npm or yarn  
+- MongoDB instance (local or cloud)  
+
+### Installation
+
+1. Clone the repository:  
+   ```bash
+   git clone https://github.com/yourusername/budgetmate.git
+   cd budgetmate
+````
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Setup environment variables:
+   Create a `.env` file in the root directory and add necessary variables like:
+
+   ```
+   REACT_APP_API_URL=http://localhost:5000
+   MONGO_URI=your_mongo_connection_string
+   JWT_SECRET=your_jwt_secret
+   ```
+
+4. Run the development server:
+
+   ```bash
+   npm start
+   ```
+
+---
+
+## Usage
+
+* Register a new account or login with existing credentials.
+* Add income and expenses to track your budget.
+* View your spending reports and analytics on the dashboard.
+* Toggle dark mode for better viewing comfort.
+
+---
+
+## Contributing
+
+Contributions are welcome! Please fork the repo and submit a pull request.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## Contact
+
+Created by [Your Name](https://github.com/yourusername) – feel free to reach out!
+
+```
+
+Just replace `yourusername`, environment variables, and any URLs with your actual info.  
+```
