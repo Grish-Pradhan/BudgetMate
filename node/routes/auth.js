@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controller/userController');
-const auth = require('../middleware/authMiddleware');
+const controller = require('../controller/userController'); // adjust path if needed
+const auth = require('../middleware/authMiddleware'); // adjust path if needed
 
-// Routes for auth actions — these are mounted on /api/auth from server.js
 router.post('/register', controller.createUser);
 router.post('/login', controller.loginUser);
-router.post('/logout', auth, controller.logoutUser);
-router.delete('/user/:id', auth, controller.deleteUser);
+router.post('/logout', auth.verifyToken, controller.logoutUser);
+router.delete('/user/:id', auth.verifyToken, controller.deleteUser);
 
 module.exports = router;

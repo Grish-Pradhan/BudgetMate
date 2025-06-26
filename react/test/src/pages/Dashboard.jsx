@@ -17,7 +17,35 @@ const Dashboard = () => {
 
   const [transactions, setTransactions] = useState([]);
 
-  // Wrap updateChart in useCallback so it's stable and can be a useEffect dependency
+  // Load transactions and totals from localStorage on mount
+  useEffect(() => {
+    const savedTransactions = localStorage.getItem('transactions');
+    if (savedTransactions) {
+      const parsed = JSON.parse(savedTransactions);
+      setTransactions(parsed);
+
+      let income = 0, spent = 0;
+      parsed.forEach(t => {
+        if (t.type === 'Income') income += t.amount;
+        else if (t.type === 'Expense') spent += t.amount;
+      });
+      setTotalIncome(income);
+      setTotalSpent(spent);
+      setRemaining(income - spent);
+    }
+  }, []);
+
+  // Save transactions to localStorage whenever transactions change
+  useEffect(() => {
+    localStorage.setItem('transactions', JSON.stringify(transactions));
+  }, [transactions]);
+
+  // Save darkMode to localStorage on change
+  useEffect(() => {
+    localStorage.setItem('darkMode', darkMode);
+  }, [darkMode]);
+
+  // Chart update function
   const updateChart = useCallback(() => {
     if (chartRef.current) chartRef.current.destroy();
 
@@ -39,12 +67,11 @@ const Dashboard = () => {
     });
   }, [chartType, totalIncome, totalSpent, remaining]);
 
-  // useEffect triggers updateChart when dependencies change
   useEffect(() => {
-    localStorage.setItem('darkMode', darkMode);
     updateChart();
   }, [darkMode, updateChart]);
 
+  // Add income handler
   const addIncome = () => {
     if (incomeSource && incomeAmount) {
       const amount = parseFloat(incomeAmount);
@@ -56,6 +83,7 @@ const Dashboard = () => {
     }
   };
 
+  // Add expense handler
   const addExpense = () => {
     if (topic && cost && times) {
       const amount = parseFloat(cost) * parseInt(times, 10);
@@ -68,6 +96,7 @@ const Dashboard = () => {
     }
   };
 
+  // Export CSV
   const exportCSV = () => {
     const csvContent = 'data:text/csv;charset=utf-8,Type,Description,Amount\n' +
       transactions.map(t => `${t.type},${t.source || t.topic},${t.amount}`).join('\n');
@@ -80,6 +109,7 @@ const Dashboard = () => {
     document.body.removeChild(link);
   };
 
+  // Export PDF
   const exportPDF = () => {
     const doc = new jsPDF();
     doc.text('Income & Expense Report', 10, 10);
@@ -89,6 +119,7 @@ const Dashboard = () => {
     doc.save('transactions.pdf');
   };
 
+  // Styles (unchanged, omitted here for brevity, use your existing styles object)
   const styles = {
     container: {
       padding: '1rem',
@@ -153,9 +184,6 @@ const Dashboard = () => {
       fontSize: '1rem',
       transition: 'background-color 0.3s ease',
     },
-    buttonHover: {
-      backgroundColor: '#341f97',
-    },
     chartCard: {
       padding: '1rem',
       backgroundColor: darkMode ? '#2f3640' : '#fff',
@@ -179,24 +207,6 @@ const Dashboard = () => {
       border: 'none',
       fontSize: '1.2rem',
       color: darkMode ? '#f1f2f6' : '#2d3436',
-    },
-    '@media (max-width: 768px)': {
-      section: {
-        flexDirection: 'column',
-      },
-      card: {
-        width: '100%',
-      },
-      totals: {
-        flexDirection: 'column',
-      },
-      totalCard: {
-        flex: '1 1 100%',
-        marginBottom: '1rem',
-      },
-      chartCard: {
-        height: '250px',
-      },
     },
   };
 
