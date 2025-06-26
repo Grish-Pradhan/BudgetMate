@@ -1,32 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { loginUserApi } from '../api/Api'; // Replace with your actual API path
+import { useNavigate } from 'react-router-dom'; // ✅ For redirecting
 
 function Login() {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [darkMode, setDarkMode] = React.useState(() => localStorage.getItem('darkMode') === 'true');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  React.useEffect(() => {
+  useEffect(() => {
     localStorage.setItem('darkMode', darkMode);
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
 
   const submit = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
-      alert('Please fill in both fields.');
+      toast.error('Please fill in both fields.');
       return;
     }
 
-    // Mock login action (replace with API call)
-    alert(`Logging in with:\nEmail: ${email}\nPassword: ${password}`);
+    setLoading(true);
+    try {
+      const response = await loginUserApi({ email, password });
+
+      if (response?.data?.token) {
+        localStorage.setItem('token', response.data.token);
+        toast.success('Login successful!');
+        navigate('/dashboard'); // ✅ Redirect to dashboard
+      } else {
+        toast.error('Login failed. Please check your credentials.');
+      }
+    } catch (error) {
+      console.error('❌ Login error:', error);
+      toast.error(error?.response?.data?.message || 'Failed to login. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const inputClasses = `border border-amber-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-amber-400 transition bg-transparent`;
+  const inputClasses =
+    'border border-amber-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-amber-400 transition bg-transparent';
 
   return (
     <div
@@ -60,7 +78,10 @@ function Login() {
           className={`${inputClasses} ${
             darkMode ? 'text-gray-100 placeholder-gray-400' : 'text-gray-900 placeholder-gray-600'
           }`}
+          disabled={loading}
+          required
         />
+
         <input
           type="password"
           name="password"
@@ -70,20 +91,30 @@ function Login() {
           className={`${inputClasses} ${
             darkMode ? 'text-gray-100 placeholder-gray-400' : 'text-gray-900 placeholder-gray-600'
           }`}
+          disabled={loading}
+          required
+          minLength={5} // ✅ Minimum password length set to 5
         />
 
         <button
           type="submit"
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white py-4 rounded-lg font-bold transition shadow-lg"
+          disabled={loading}
+          className="w-full bg-purple-600 hover:bg-purple-700 text-white py-4 rounded-lg font-bold transition shadow-lg disabled:opacity-50"
         >
-          Login
+          {loading ? 'Logging in...' : 'Login'}
         </button>
 
         <div className="text-sm mt-2 flex justify-between text-blue-500">
-          <a href="/register" className="hover:underline">Forgot Password?</a>
-          <a href="/register" className="hover:underline">Create an Account</a>
+          <a href="/forgot-password" className="hover:underline">
+            Forgot Password?
+          </a>
+          <a href="/register" className="hover:underline">
+            Create an Account
+          </a>
         </div>
       </form>
+
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
     </div>
   );
 }

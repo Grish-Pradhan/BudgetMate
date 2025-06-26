@@ -2,12 +2,15 @@ import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { createUserApi } from '../api/Api';
+import { useNavigate } from 'react-router-dom';  // <-- Import useNavigate
 
 function Register() {
-  const [name, setName] = React.useState('');  // renamed from name -> username
+  const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [darkMode, setDarkMode] = React.useState(() => localStorage.getItem('darkMode') === 'true');
+  const [loading, setLoading] = React.useState(false);
+  const navigate = useNavigate();  // <-- Initialize navigate
 
   React.useEffect(() => {
     localStorage.setItem('darkMode', darkMode);
@@ -22,24 +25,25 @@ function Register() {
     if (!name || !email || !password) {
       return toast.error('Please fill in all fields.');
     }
-
+    setLoading(true);
     try {
-      const data = {
-        name,  // matches your backend field exactly
-        email,
-        password,
-      };
-
+      const data = { name, email, password };
       const response = await createUserApi(data);
 
       if (response?.data?.message) {
         toast.success(response.data.message);
+        // Redirect after short delay to show toast
+        setTimeout(() => {
+          navigate('/login');
+        }, 1500);
       } else {
         toast.error('Registration failed. Please try again.');
       }
     } catch (error) {
       console.error('❌ Error submitting form:', error);
       toast.error(error?.response?.data?.message || 'Failed to register. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,13 +76,15 @@ function Register() {
 
         <input
           type="text"
-          name="username"  
+          name="username"
           value={name}
           placeholder="Enter your name"
           onChange={(e) => setName(e.target.value)}
           className={`${inputClasses} ${
             darkMode ? 'text-gray-100 placeholder-gray-400 border-gray-600' : 'text-gray-900 placeholder-gray-600'
           }`}
+          disabled={loading}
+          required
         />
         <input
           type="email"
@@ -89,6 +95,8 @@ function Register() {
           className={`${inputClasses} ${
             darkMode ? 'text-gray-100 placeholder-gray-400 border-gray-600' : 'text-gray-900 placeholder-gray-600'
           }`}
+          disabled={loading}
+          required
         />
         <input
           type="password"
@@ -99,16 +107,20 @@ function Register() {
           className={`${inputClasses} ${
             darkMode ? 'text-gray-100 placeholder-gray-400 border-gray-600' : 'text-gray-900 placeholder-gray-600'
           }`}
+          disabled={loading}
+          required
+          minLength={5}
         />
         <button
           type="submit"
-          className="w-full bg-purple-600 hover:bg-purple-700 text-white py-4 rounded-lg font-bold transition shadow-lg"
+          disabled={loading}
+          className="w-full bg-purple-600 hover:bg-purple-700 text-white py-4 rounded-lg font-bold transition shadow-lg disabled:opacity-50"
         >
-          Register
+          {loading ? 'Registering...' : 'Register'}
         </button>
       </form>
 
-      <ToastContainer />
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
     </div>
   );
 }

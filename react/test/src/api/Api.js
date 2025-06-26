@@ -15,9 +15,9 @@ const Api = axios.create({
     'Content-Type': 'application/json',
   },
 });
+export const createUserApi = (data) => Api.post('/register', data);          
+export const loginUserApi = (data) => Api.post('/login', data);              
+export const deleteUserApi = (id) => Api.delete(`/user/${id}`);             
+export const getUserApi = () => Api.get('/user');                            
+export const updateUserApi = (data) => ApiFromData.put('/user', data);       
 
-export const createUserApi = (data) => Api.post('/register', data);
-export const loginUserApi = (data) => Api.post('/auth/login', data);
-export const deleteUserApi = (id) => Api.delete(`/auth/user/${id}`);
-export const getUserApi = () => Api.get('/auth/user');
-export const updateUserApi = (data) => ApiFromData.put('/auth/user', data);
