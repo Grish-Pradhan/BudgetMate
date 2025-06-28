@@ -12,7 +12,6 @@ const sequelize = new Sequelize(
   }
 );
 
-// Optional: function to test connection
 const connectDB = async () => {
   try {
     await sequelize.authenticate();
@@ -23,3 +22,4 @@ const connectDB = async () => {
 };
 
 module.exports = { sequelize, connectDB };
+//Grish Pradhan

@@ -8,17 +8,17 @@ function Register() {
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [darkMode, setDarkMode] = React.useState(() => localStorage.getItem('darkMode') === 'true');
+  const [darkMode, setDarkMode] = React.useState(() => localStorage.getItem('adminDarkMode') === 'true');
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    localStorage.setItem('darkMode', darkMode);
+    localStorage.setItem('adminDarkMode', darkMode);
     document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
 
   const inputClasses =
-    'border border-amber-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-amber-400 transition bg-transparent';
+    'border rounded-md p-4 focus:outline-none focus:ring-4 focus:ring-purple-500 transition bg-transparent shadow-sm';
 
   const submit = async (e) => {
     e.preventDefault();
@@ -27,7 +27,7 @@ function Register() {
     }
     setLoading(true);
     try {
-      const data = { name, email, password, role: 'user' }; // role always 'user'
+      const data = { name, email, password, role: 'user' };
       const response = await createUserApi(data);
 
       if (response?.data?.message) {
@@ -49,27 +49,35 @@ function Register() {
   return (
     <div
       className={`min-h-screen flex items-center justify-center px-4 transition-colors duration-300 ${
-        darkMode ? 'bg-gray-900 text-gray-200' : 'bg-gray-100 text-gray-900'
+        darkMode ? 'bg-[#121212] text-[#e0e0e0]' : 'bg-[#f5f6fa] text-[#2d3436]'
       }`}
     >
-      <button
-        onClick={() => setDarkMode((prev) => !prev)}
-        className={`fixed top-4 right-4 z-50 px-4 py-2 rounded-md border transition font-semibold shadow ${
-          darkMode
-            ? 'border-gray-400 hover:bg-gray-700 hover:text-white text-gray-200'
-            : 'border-gray-600 hover:bg-gray-300 hover:text-gray-900 text-gray-900'
-        }`}
-      >
-        {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
-      </button>
-
       <form
         onSubmit={submit}
-        className={`flex flex-col gap-4 w-full max-w-md p-8 rounded-lg shadow-md transition-colors duration-300 ${
-          darkMode ? 'bg-gray-800' : 'bg-white'
+        className={`relative flex flex-col gap-6 w-full max-w-lg p-10 rounded-2xl shadow-xl transition-colors duration-300 ${
+          darkMode ? 'bg-[#1e1e1e] shadow-[#bb86fc]/50' : 'bg-white shadow-[#6c5ce7]/30'
         }`}
+        style={{ paddingTop: '4.8rem' }} // overlap hatauna padding-top
       >
-        <h2 className="text-2xl font-bold mb-2 text-center">Create an Account</h2>
+        {/* Dark Mode Toggle lai*/}
+        <button
+          type="button"
+          onClick={() => setDarkMode((prev) => !prev)}
+          aria-label="Toggle dark mode"
+          className={`absolute top-4 right-4 px-4 py-2 rounded-md font-semibold cursor-pointer
+            transition-colors duration-300
+            ${darkMode
+              ? 'bg-transparent border border-[#bb86fc] text-[#e0e0e0] hover:bg-[#bb86fc] hover:text-[#121212]'
+              : 'bg-transparent border border-[#6c5ce7] text-[#2d3436] hover:bg-[#6c5ce7] hover:text-white'
+            }
+          `}
+        >
+          {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
+        </button>
+
+        <h2 className="text-3xl font-extrabold text-purple-600 mb-6 text-center">
+          Create an Account
+        </h2>
 
         <input
           type="text"
@@ -77,8 +85,10 @@ function Register() {
           value={name}
           placeholder="Enter your name"
           onChange={(e) => setName(e.target.value)}
-          className={`${inputClasses} ${
-            darkMode ? 'text-gray-100 placeholder-gray-400 border-gray-600' : 'text-gray-900 placeholder-gray-600'
+          className={`${inputClasses} w-full ${
+            darkMode
+              ? 'text-[#e0e0e0] placeholder-[#9f94c9] border-[#555] focus:border-[#bb86fc]'
+              : 'text-[#2d3436] placeholder-gray-500 border-gray-300 focus:border-[#6c5ce7]'
           }`}
           disabled={loading}
           required
@@ -89,8 +99,10 @@ function Register() {
           value={email}
           placeholder="Enter your email"
           onChange={(e) => setEmail(e.target.value)}
-          className={`${inputClasses} ${
-            darkMode ? 'text-gray-100 placeholder-gray-400 border-gray-600' : 'text-gray-900 placeholder-gray-600'
+          className={`${inputClasses} w-full ${
+            darkMode
+              ? 'text-[#e0e0e0] placeholder-[#9f94c9] border-[#555] focus:border-[#bb86fc]'
+              : 'text-[#2d3436] placeholder-gray-500 border-gray-300 focus:border-[#6c5ce7]'
           }`}
           disabled={loading}
           required
@@ -101,8 +113,10 @@ function Register() {
           value={password}
           placeholder="Enter your password"
           onChange={(e) => setPassword(e.target.value)}
-          className={`${inputClasses} ${
-            darkMode ? 'text-gray-100 placeholder-gray-400 border-gray-600' : 'text-gray-900 placeholder-gray-600'
+          className={`${inputClasses} w-full ${
+            darkMode
+              ? 'text-[#e0e0e0] placeholder-[#9f94c9] border-[#555] focus:border-[#bb86fc]'
+              : 'text-[#2d3436] placeholder-gray-500 border-gray-300 focus:border-[#6c5ce7]'
           }`}
           disabled={loading}
           required
@@ -112,10 +126,29 @@ function Register() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-purple-600 hover:bg-purple-700 text-white py-4 rounded-lg font-bold transition shadow-lg disabled:opacity-50"
+          className={`w-full py-4 rounded-lg font-bold shadow-lg transition-colors duration-300 ${
+            darkMode
+              ? 'bg-[#bb86fc] hover:bg-[#9f6de0] text-[#121212]'
+              : 'bg-[#6c5ce7] hover:bg-[#594dcf] text-white'
+          } disabled:opacity-50`}
         >
           {loading ? 'Registering...' : 'Register'}
         </button>
+
+        {/* Login redirect */}
+        <p
+          className={`mt-4 text-center text-sm ${
+            darkMode ? 'text-purple-300' : 'text-purple-600'
+          }`}
+        >
+          Already have an account?{' '}
+          <a
+            href="/login"
+            className="underline font-semibold hover:text-purple-800 transition-colors duration-200"
+          >
+            Login
+          </a>
+        </p>
       </form>
 
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
@@ -124,3 +157,4 @@ function Register() {
 }
 
 export default Register;
+//Grish Pradhan

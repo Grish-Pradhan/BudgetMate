@@ -1,11 +1,11 @@
+// server.js
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const { sequelize, connectDB } = require('./db/database');
 const authRoute = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
-const transactionRoutes = require('./routes/transactionRoutes');  // <-- import transaction routes
-
+const transactionRoutes = require('./routes/transactionRoutes');  
 dotenv.config();
 
 const app = express();
@@ -23,8 +23,8 @@ app.use(express.json());
 
 // Register routes
 app.use('/api/auth', authRoute);
-app.use('/admin', adminRoutes); // Middleware checks inside admin.js
-app.use('/api/transactions', transactionRoutes);  // <-- register transaction routes here
+app.use('/admin', adminRoutes);
+app.use('/api/transactions', transactionRoutes);  
 
 // Test routes
 app.get('/', (_req, res) => res.send('Welcome to the Home Page'));
@@ -47,3 +47,6 @@ const startServer = async () => {
 };
 
 startServer();
+
+
+//Grish Pradhan

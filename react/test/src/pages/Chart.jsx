@@ -16,7 +16,7 @@ export default function Chart({ type, title, width, labels }) {
 		"rgba(0, 122, 64, 0.4)",
 		"rgba(250, 255, 64, 0.4)",
 	];
-	// data analytics
+	// data analytics ko lagi
 	const data = expenses.map((expense) => ({
 		category: expense.category,
 		spends: expenses
@@ -136,3 +136,4 @@ export default function Chart({ type, title, width, labels }) {
 		</div>
 	);
 }
+//Grish Pradhan

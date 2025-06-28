@@ -7,15 +7,11 @@ function Contact() {
     message: '',
   });
 
-  const [darkMode, setDarkMode] = React.useState(() => localStorage.getItem('darkMode') === 'true');
+  const [darkMode, setDarkMode] = React.useState(() => localStorage.getItem('adminDarkMode') === 'true');
 
   React.useEffect(() => {
-    localStorage.setItem('darkMode', darkMode);
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    localStorage.setItem('adminDarkMode', darkMode);
+    document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
 
   const handleChange = (e) => {
@@ -45,35 +41,44 @@ function Contact() {
 
   return (
     <div
-      className={`min-h-screen flex flex-col items-center px-6 pt-10 transition-colors duration-300 ${
-        darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-100 text-gray-900'
-      }`}
+      className={`min-h-screen flex flex-col items-center px-6 pt-10 transition-colors duration-300
+        ${darkMode ? 'bg-[#121212] text-[#e0e0e0]' : 'bg-[#f5f6fa] text-[#2d3436]'}
+      `}
     >
-      {/* Fixed dark mode toggle button top-right */}
-      <button
-        onClick={() => setDarkMode(prev => !prev)}
-        className="fixed top-4 right-4 z-50 px-4 py-2 rounded-md border border-gray-500 hover:bg-gray-700 hover:text-white transition font-semibold shadow"
+      <main
+        className={`relative max-w-xl w-full rounded-2xl p-10 shadow-xl transition-colors duration-300
+          ${darkMode
+            ? 'bg-[#1e1e1e] shadow-[#bb86fc]/50'
+            : 'bg-white shadow-[#6c5ce7]/30'
+          }
+        `}
       >
-        {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
-      </button>
+        {/* Dark mode toggle inside main, top right */}
+        <button
+          onClick={() => setDarkMode(prev => !prev)}
+          className={`absolute top-4 right-4 px-4 py-2 rounded-md font-semibold cursor-pointer
+            transition-colors duration-300
+            ${darkMode
+              ? 'bg-transparent border border-[#bb86fc] text-[#e0e0e0] hover:bg-[#bb86fc] hover:text-[#121212]'
+              : 'bg-transparent border border-[#6c5ce7] text-[#2d3436] hover:bg-[#6c5ce7] hover:text-white'
+            }
+          `}
+          aria-label="Toggle dark mode"
+        >
+          {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
+        </button>
 
-      <main className="max-w-xl w-full">
         <h1 className="text-4xl font-extrabold text-purple-600 mb-10 text-center">
           Get in Touch
         </h1>
 
-        <form
-          onSubmit={handleSubmit}
-          className={`rounded-2xl shadow-xl p-10 space-y-8 transition-colors duration-300 ${
-            darkMode ? 'bg-gray-800 shadow-purple-700/50' : 'bg-white shadow-purple-300/30'
-          }`}
-        >
+        <form onSubmit={handleSubmit} className="space-y-8">
           <div>
             <label
               htmlFor="name"
-              className={`block mb-3 font-semibold ${
-                darkMode ? 'text-gray-300' : 'text-gray-700'
-              }`}
+              className={`block mb-3 font-semibold
+                ${darkMode ? 'text-[#d3c4fc]' : 'text-gray-700'}
+              `}
             >
               Name
             </label>
@@ -85,20 +90,21 @@ function Contact() {
               onChange={handleChange}
               required
               placeholder="Your full name"
-              className={`${inputClasses} ${
-                darkMode
-                  ? 'text-gray-100 placeholder-gray-400 border-gray-600 focus:border-purple-400'
-                  : 'text-gray-900 placeholder-gray-500 border-gray-300 focus:border-purple-600'
-              } w-full`}
+              className={`${inputClasses} w-full
+                ${darkMode
+                  ? 'text-[#e0e0e0] placeholder-[#9f94c9] border-[#555] focus:border-[#bb86fc]'
+                  : 'text-[#2d3436] placeholder-gray-500 border-gray-300 focus:border-[#6c5ce7]'
+                }
+              `}
             />
           </div>
 
           <div>
             <label
               htmlFor="email"
-              className={`block mb-3 font-semibold ${
-                darkMode ? 'text-gray-300' : 'text-gray-700'
-              }`}
+              className={`block mb-3 font-semibold
+                ${darkMode ? 'text-[#d3c4fc]' : 'text-gray-700'}
+              `}
             >
               Email
             </label>
@@ -110,20 +116,21 @@ function Contact() {
               onChange={handleChange}
               required
               placeholder="you@example.com"
-              className={`${inputClasses} ${
-                darkMode
-                  ? 'text-gray-100 placeholder-gray-400 border-gray-600 focus:border-purple-400'
-                  : 'text-gray-900 placeholder-gray-500 border-gray-300 focus:border-purple-600'
-              } w-full`}
+              className={`${inputClasses} w-full
+                ${darkMode
+                  ? 'text-[#e0e0e0] placeholder-[#9f94c9] border-[#555] focus:border-[#bb86fc]'
+                  : 'text-[#2d3436] placeholder-gray-500 border-gray-300 focus:border-[#6c5ce7]'
+                }
+              `}
             />
           </div>
 
           <div>
             <label
               htmlFor="message"
-              className={`block mb-3 font-semibold ${
-                darkMode ? 'text-gray-300' : 'text-gray-700'
-              }`}
+              className={`block mb-3 font-semibold
+                ${darkMode ? 'text-[#d3c4fc]' : 'text-gray-700'}
+              `}
             >
               Message
             </label>
@@ -135,17 +142,23 @@ function Contact() {
               required
               rows={6}
               placeholder="Write your message here..."
-              className={`${inputClasses} resize-none ${
-                darkMode
-                  ? 'text-gray-100 placeholder-gray-400 border-gray-600 focus:border-purple-400'
-                  : 'text-gray-900 placeholder-gray-500 border-gray-300 focus:border-purple-600'
-              } w-full`}
+              className={`${inputClasses} resize-none w-full
+                ${darkMode
+                  ? 'text-[#e0e0e0] placeholder-[#9f94c9] border-[#555] focus:border-[#bb86fc]'
+                  : 'text-[#2d3436] placeholder-gray-500 border-gray-300 focus:border-[#6c5ce7]'
+                }
+              `}
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white py-4 rounded-lg font-bold transition shadow-lg"
+            className={`w-full py-4 rounded-lg font-bold shadow-lg transition-colors duration-300
+              ${darkMode
+                ? 'bg-[#bb86fc] hover:bg-[#9f6de0] text-[#121212]'
+                : 'bg-[#6c5ce7] hover:bg-[#594dcf] text-white'
+              }
+            `}
           >
             Send Message
           </button>
@@ -156,3 +169,4 @@ function Contact() {
 }
 
 export default Contact;
+//Grish Pradhan

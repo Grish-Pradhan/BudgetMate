@@ -9,7 +9,7 @@ const PrivateRoute = ({ children, allowedRoles }) => {
   try {
     const decoded = jwtDecode(token);
 
-    // Optional: Check token expiry
+    
     if (decoded.exp * 1000 < Date.now()) {
       localStorage.removeItem('token');
       return <Navigate to="/login" replace />;
@@ -26,3 +26,4 @@ const PrivateRoute = ({ children, allowedRoles }) => {
 };
 
 export default PrivateRoute;
+//Grish Pradhan
