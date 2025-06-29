@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -11,13 +12,12 @@ const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded; 
-    next();  
+    next();
   } catch (err) {
     console.error('JWT verification failed:', err);
     res.status(401).json({ message: 'Unauthorized: Invalid token' });
   }
 };
-
 
 const verifyAdmin = (req, res, next) => {
   if (!req.user || req.user.role !== 'admin') {
@@ -30,5 +30,4 @@ module.exports = {
   verifyToken,
   verifyAdmin,
 };
-
 //Grish Pradhan

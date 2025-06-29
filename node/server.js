@@ -10,7 +10,7 @@ dotenv.config();
 
 const app = express();
 
-// Enable CORS for your frontend app (adjust origin accordingly)
+// Enable CORS for your frontend app
 app.use(
   cors({
     origin: 'http://localhost:5173',
@@ -18,7 +18,7 @@ app.use(
   })
 );
 
-// Middleware to parse incoming JSON requests
+// Middleware to get incoming JSON requests
 app.use(express.json());
 
 // Register routes

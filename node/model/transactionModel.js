@@ -7,7 +7,7 @@ const Transaction = sequelize.define('Transaction', {
     primaryKey: true,
     autoIncrement: true,
   },
-  type: {  // 'Income' or 'Expense' ko lagi ENUM use garne
+  type: {
     type: DataTypes.ENUM('Income', 'Expense'),
     allowNull: false,
   },
@@ -24,7 +24,7 @@ const Transaction = sequelize.define('Transaction', {
     allowNull: false,
     defaultValue: DataTypes.NOW,
   },
- userId: {
+  userId: {
     type: DataTypes.INTEGER,
     allowNull: true,
     field: 'user_id',

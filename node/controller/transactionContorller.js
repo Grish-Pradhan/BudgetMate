@@ -1,9 +1,20 @@
 const Transaction = require('../model/transactionmodel');
 
+// Get transactions for the logged-in user or all if admin
 const getTransactions = async (req, res) => {
   try {
-    
+    console.log('User info from token:', req.user); 
+
+    let whereClause = {};
+
+    if (req.user.role !== 'admin') {
+      // Normal user lai only their transactions
+      whereClause.userId = req.user.id;
+    }
+    // Admin lai get all transactions
+
     const transactions = await Transaction.findAll({
+      where: whereClause,
       order: [['timeOfEntry', 'DESC']],
     });
 
@@ -14,7 +25,7 @@ const getTransactions = async (req, res) => {
   }
 };
 
-// Add new transaction (income or expense)
+// Add new transaction
 const addTransaction = async (req, res) => {
   try {
     const { type, description, amount } = req.body;
@@ -32,7 +43,6 @@ const addTransaction = async (req, res) => {
       return res.status(400).json({ error: 'Type must be Income or Expense' });
     }
 
-    
     if (!req.user || !req.user.id) {
       return res.status(401).json({ error: 'Unauthorized: missing user info' });
     }
@@ -42,7 +52,7 @@ const addTransaction = async (req, res) => {
       description,
       amount: amountNumber,
       timeOfEntry: new Date(),
-      userId: req.user.id,  
+      userId: req.user.id,
     });
 
     res.status(201).json(transaction);
@@ -52,14 +62,21 @@ const addTransaction = async (req, res) => {
   }
 };
 
-// Get totals grouped by type (Income, Expense)
+
 const getTotals = async (req, res) => {
   try {
+    let whereClause = {};
+
+    if (req.user.role !== 'admin') {
+      whereClause.userId = req.user.id;
+    }
+
     const totals = await Transaction.findAll({
       attributes: [
         'type',
         [Transaction.sequelize.fn('SUM', Transaction.sequelize.col('amount')), 'total'],
       ],
+      where: whereClause,
       group: ['type'],
     });
 

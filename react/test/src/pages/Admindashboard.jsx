@@ -11,6 +11,7 @@ const AdminDashboard = () => {
   const [selectedUserId, setSelectedUserId] = useState('all');
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('adminDarkMode') === 'true');
 
+  // Fetch users once on mount
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -29,38 +30,50 @@ const AdminDashboard = () => {
       }
     };
 
+    fetchUsers();
+  }, []);
+
+  // Fetch transactions whenever selectedUserId changes
+  useEffect(() => {
     const fetchTransactions = async () => {
+      setLoadingTransactions(true);
+      setErrorTransactions(null);
       try {
         const res = await getTransactionsApi();
+        console.log('Raw transactions API response:', res.data);
+
         const txArray =
           Array.isArray(res.data) ? res.data :
           Array.isArray(res.data.transactions) ? res.data.transactions :
           Array.isArray(res.data.data) ? res.data.data :
           [];
-        setTransactions(txArray);
+
+        console.log('Extracted transactions array length:', txArray.length);
+
+        // If you want to filter by userId on frontend (works only if backend returns all transactions)
+        const filtered = selectedUserId === 'all'
+          ? txArray
+          : txArray.filter(tx => String(tx.userId ?? tx.user_id) === String(selectedUserId));
+
+        console.log('Filtered transactions length:', filtered.length);
+
+        setTransactions(filtered);
       } catch (error) {
         console.error('Error fetching transactions:', error);
         setErrorTransactions('Failed to fetch transactions');
+        setTransactions([]);
       } finally {
         setLoadingTransactions(false);
       }
     };
 
-    fetchUsers();
     fetchTransactions();
-  }, []);
+  }, [selectedUserId]);
 
   useEffect(() => {
     localStorage.setItem('adminDarkMode', darkMode);
     document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
-
-  const filteredTransactions =
-    selectedUserId === 'all'
-      ? transactions
-      : transactions.filter(tx =>
-          String(tx.userId ?? tx.user_id) === String(selectedUserId)
-        );
 
   const formatMySQLTimestamp = (timestamp) => {
     if (!timestamp) return '—';
@@ -255,14 +268,14 @@ const AdminDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredTransactions.length === 0 ? (
+              {transactions.length === 0 ? (
                 <tr>
                   <td colSpan="6" style={styles.noData}>
                     No transactions found for this user.
                   </td>
                 </tr>
               ) : (
-                filteredTransactions.map(tx => (
+                transactions.map(tx => (
                   <tr
                     key={tx.id}
                     style={{ cursor: 'default' }}
