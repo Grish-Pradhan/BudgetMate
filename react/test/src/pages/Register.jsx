@@ -54,28 +54,29 @@ function Register() {
     >
       <form
         onSubmit={submit}
-        className={`relative flex flex-col gap-6 w-full max-w-lg p-10 rounded-2xl shadow-xl transition-colors duration-300 ${
+        className={`relative flex flex-col gap-8 w-full max-w-2xl p-12 rounded-2xl shadow-xl transition-colors duration-300 ${
           darkMode ? 'bg-[#1e1e1e] shadow-[#bb86fc]/50' : 'bg-white shadow-[#6c5ce7]/30'
         }`}
-        style={{ paddingTop: '4.8rem' }} // overlap hatauna padding-top
+        style={{ paddingTop: '5.5rem' }} // matched login's top padding for toggle spacing
       >
-        {/* Dark Mode Toggle lai*/}
+        {/* Dark Mode Toggle */}
         <button
           type="button"
           onClick={() => setDarkMode((prev) => !prev)}
           aria-label="Toggle dark mode"
-          className={`absolute top-4 right-4 px-4 py-2 rounded-md font-semibold cursor-pointer
+          className={`absolute top-6 right-6 px-5 py-2 rounded-md font-semibold cursor-pointer
             transition-colors duration-300
-            ${darkMode
-              ? 'bg-transparent border border-[#bb86fc] text-[#e0e0e0] hover:bg-[#bb86fc] hover:text-[#121212]'
-              : 'bg-transparent border border-[#6c5ce7] text-[#2d3436] hover:bg-[#6c5ce7] hover:text-white'
+            ${
+              darkMode
+                ? 'bg-transparent border border-[#bb86fc] text-[#e0e0e0] hover:bg-[#bb86fc] hover:text-[#121212]'
+                : 'bg-transparent border border-[#6c5ce7] text-[#2d3436] hover:bg-[#6c5ce7] hover:text-white'
             }
           `}
         >
           {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
         </button>
 
-        <h2 className="text-3xl font-extrabold text-purple-600 mb-6 text-center">
+        <h2 className="text-4xl font-extrabold text-purple-600 mb-6 text-center">
           Create an Account
         </h2>
 
@@ -126,7 +127,7 @@ function Register() {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full py-4 rounded-lg font-bold shadow-lg transition-colors duration-300 ${
+          className={`w-full py-5 rounded-lg font-bold shadow-lg transition-colors duration-300 ${
             darkMode
               ? 'bg-[#bb86fc] hover:bg-[#9f6de0] text-[#121212]'
               : 'bg-[#6c5ce7] hover:bg-[#594dcf] text-white'
@@ -157,4 +158,4 @@ function Register() {
 }
 
 export default Register;
-//Grish Pradhan
+//grish Pradhan
