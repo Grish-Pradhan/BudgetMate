@@ -1,101 +1,146 @@
+# 📊 BudgetMate
 
-````markdown
-# BudgetMate
-
-**BudgetMate** is a personal finance management web application designed to help users track their income, expenses, and budgets with ease. It provides an intuitive dashboard, transaction management, and insightful reports to empower better financial decisions.
+**BudgetMate** is a personal finance management web application that enables users to securely track income, expenses, and budgets. With an intuitive dashboard and detailed reporting, BudgetMate empowers users to take control of their financial future.
 
 ---
 
-## Features
+## 🚀 Features
 
-- User registration and authentication  
-- Add, edit, and delete income and expenses  
-- Interactive charts and reports  
-- Dark mode support  
-- Responsive design for mobile and desktop
-- Interactive UI
-
-
----
-
-## Technologies
-
-- React  
-- Tailwind CSS  
-- React Router  
-- Axios  
-- Node.js & Express (backend)  
-- MYSQL (or your database)  
-- JWT Authentication  
-- React Toastify for notifications  
+- 🔐 User registration & secure authentication (JWT)
+- ➕ Add, 📝 edit, and 🗑️ delete income/expenses
+- 📈 Interactive charts and summary reports
+- 🌙 Dark mode toggle
+- 📱 Fully responsive design (mobile & desktop)
+- ⚙️ Clean, modern UI with Tailwind CSS
+- 🔔 Real-time notifications with React Toastify
 
 ---
 
-## Getting Started
+## 🛠️ Technologies Used
+
+### Frontend
+- React (with Vite)
+- Tailwind CSS
+- React Router DOM
+- Axios
+- React Toastify
+
+### Backend
+- Node.js & Express.js
+- MySQL
+- Sequelize ORM
+- JWT & bcrypt for authentication
+- dotenv, CORS, Helmet for security
+
+---
+
+## 🧑‍💻 Getting Started
 
 ### Prerequisites
 
-- Node.js (v14 or later)  
-- npm or yarn  
-- MYSQL
-
-### Installation
-
-1. Clone the repository:  
-   ```bash
-   git clone https://github.com/yourusername/budgetmate.git
-   cd budgetmate
-````
-
-2. Install dependencies:
-
-   ```
-   npm install
-   ```
-
-3. Setup environment variables:
-   Create a `.env` file in the root directory and add necessary variables like:
-
-   ```
-   REACT_APP_API_URL=http://localhost:5000
-   MYSQL_URI=your_MYSQL_connection_string
-   JWT_SECRET=your_jwt_secret
-   ```
-
-4. Run the development server:
-
-   ```
-   npm start
-   ```
+Make sure you have the following installed:
+- [Node.js](https://nodejs.org/) (v14 or above)
+- [MySQL](https://www.mysql.com/)
+- Git
 
 ---
 
-## Usage
+## ⚙️ Installation Steps
 
-* Register a new account or login with existing credentials.
-* Add income and expenses to track your budget.
-* View your spending reports and analytics on the dashboard.
-* Toggle dark mode for better viewing comfort.
+### 1. Clone the Repository
 
----
-
-## Contributing
-
-Contributions are welcome! Please fork the repo and submit a pull request.
-
----
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-## Contact
-
-Created by Grish Pradhan (https://github.com/Grish-Pradhan) – feel free to reach out!
-
+```bash
+git clone https://github.com/Grish-Pradhan/BudgetMate.git
+cd BudgetMate
 ```
 
-Just replace `yourusername`, environment variables, and any URLs with your actual info.  
+### 2. Backend Setup
+
+```bash
+cd backend
+npm install
 ```
+
+- Create a `.env` file in the `backend` directory:
+```env
+DB_HOST=localhost
+DB_USER=your_mysql_username
+DB_PASSWORD=your_mysql_password
+DB_NAME=budgetmate
+JWT_SECRET=your_jwt_secret
+```
+
+- Sync your MySQL database (make sure it's running):
+```bash
+npm run db:sync  # or run manually via Sequelize if set up
+npm start        # starts the backend server
+```
+
+### 3. Frontend Setup
+
+```bash
+cd ../frontend
+npm install
+npm run dev
+```
+
+Access the app at:  
+📍 **http://localhost:5173**
+
+---
+
+## 🔐 Security Measures
+
+- Passwords hashed using bcrypt  
+- JWT-based session authentication  
+- Environment variables for sensitive data  
+- CORS & Helmet for HTTP security  
+- Input validation on both client & server
+
+---
+
+## 🎥 Demonstration
+
+📺 **Project Demo Video:**  
+👉 [Watch on YouTube (Unlisted)](https://youtube.com/your-unlisted-video-link)
+
+---
+
+## 🔗 Version Control
+
+🔧 All source code changes are tracked using Git.  
+📂 Repository is hosted on GitHub:  
+👉 [https://github.com/Grish-Pradhan/BudgetMate](https://github.com/Grish-Pradhan/BudgetMate)
+
+### Branching Strategy:
+- `main`: Stable, production-ready code
+- `feature/*`: New features (e.g., `feature/login`)
+- `bugfix/*`: Bug fixes
+- Tags used for major milestones
+
+---
+
+## 📌 To-Do / Future Improvements
+
+- Role-based access (admin vs regular users)  
+- Multi-factor authentication  
+- Expense categorization and filters  
+- Bank API integration for automated import  
+- Offline support (PWA)
+
+---
+
+## 🧾 License
+
+This project is for academic use only under Softwarica College ST4056CEM module.
+
+---
+
+## 📚 References
+
+See full list of references in the report.  
+Key libraries:
+- [React Docs](https://react.dev/learn)
+- [Node.js Docs](https://nodejs.org/docs/latest/api/)
+- [Sequelize GitHub](https://github.com/sequelize/sequelize)
+- [Tailwind CSS Docs](https://tailwindcss.com/docs)
