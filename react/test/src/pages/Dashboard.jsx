@@ -457,6 +457,8 @@ const Dashboard = () => {
             backgroundColor: darkMode ? '#2f3640' : '#fff',
             borderRadius: '10px',
             margin: '1rem 0',
+            marginTop: '2rem',
+            marginBottom: '2rem',
             height: '300px',
             position: 'relative',
             fontFamily: "'Roboto', sans-serif",
