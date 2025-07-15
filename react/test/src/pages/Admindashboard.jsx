@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getUsersApi, getTransactionsApi } from '../api/Api';
 
 const AdminDashboard = () => {
@@ -11,7 +11,11 @@ const AdminDashboard = () => {
   const [selectedUserId, setSelectedUserId] = useState('all');
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('adminDarkMode') === 'true');
 
-  // Fetch users once on mount
+  useEffect(() => {
+    localStorage.setItem('adminDarkMode', darkMode);
+    document.documentElement.classList.toggle('dark', darkMode);
+  }, [darkMode]);
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -23,7 +27,6 @@ const AdminDashboard = () => {
           [];
         setUsers(usersArray);
       } catch (error) {
-        console.error('Error fetching users:', error);
         setErrorUsers('Failed to fetch users');
       } finally {
         setLoadingUsers(false);
@@ -33,33 +36,24 @@ const AdminDashboard = () => {
     fetchUsers();
   }, []);
 
-  // Fetch transactions whenever selectedUserId changes
   useEffect(() => {
     const fetchTransactions = async () => {
       setLoadingTransactions(true);
       setErrorTransactions(null);
       try {
         const res = await getTransactionsApi();
-        console.log('Raw transactions API response:', res.data);
-
         const txArray =
           Array.isArray(res.data) ? res.data :
           Array.isArray(res.data.transactions) ? res.data.transactions :
           Array.isArray(res.data.data) ? res.data.data :
           [];
 
-        console.log('Extracted transactions array length:', txArray.length);
-
-        // If you want to filter by userId on frontend (works only if backend returns all transactions)
         const filtered = selectedUserId === 'all'
           ? txArray
           : txArray.filter(tx => String(tx.userId ?? tx.user_id) === String(selectedUserId));
 
-        console.log('Filtered transactions length:', filtered.length);
-
         setTransactions(filtered);
       } catch (error) {
-        console.error('Error fetching transactions:', error);
         setErrorTransactions('Failed to fetch transactions');
         setTransactions([]);
       } finally {
@@ -70,142 +64,53 @@ const AdminDashboard = () => {
     fetchTransactions();
   }, [selectedUserId]);
 
-  useEffect(() => {
-    localStorage.setItem('adminDarkMode', darkMode);
-    document.documentElement.classList.toggle('dark', darkMode);
-  }, [darkMode]);
-
   const formatMySQLTimestamp = (timestamp) => {
     if (!timestamp) return '—';
     return new Date(timestamp).toLocaleString();
   };
 
-  const styles = {
-    container: {
-      padding: '2rem',
-      fontFamily: "'Poppins', sans-serif",
-      backgroundColor: darkMode ? '#121212' : '#f5f6fa',
-      color: darkMode ? '#e0e0e0' : '#2d3436',
-      minHeight: '100vh',
-      width: '100%',
-      margin: 0,
-      transition: 'background-color 0.3s, color 0.3s',
-    },
-    toggleDark: {
-      float: 'right',
-      marginBottom: '1rem',
-      cursor: 'pointer',
-      backgroundColor: 'transparent',
-      border: 'none',
-      fontSize: '1.2rem',
-      color: darkMode ? '#e0e0e0' : '#2d3436',
-    },
-    title: {
-      textAlign: 'center',
-      fontSize: '2.5rem',
-      marginBottom: '2rem',
-      fontWeight: '700',
-      color: darkMode ? '#bb86fc' : '#6c5ce7',
-    },
-    section: {
-      backgroundColor: darkMode ? '#1e1e1e' : '#fff',
-      borderRadius: '10px',
-      padding: '1.5rem',
-      marginBottom: '2rem',
-      boxShadow: darkMode
-        ? '0 2px 8px rgb(255 255 255 / 0.1)'
-        : '0 2px 8px rgb(0 0 0 / 0.1)',
-      transition: 'background-color 0.3s, box-shadow 0.3s',
-    },
-    sectionTitle: {
-      fontSize: '1.8rem',
-      marginBottom: '1rem',
-      borderBottom: `3px solid ${darkMode ? '#bb86fc' : '#6c5ce7'}`,
-      paddingBottom: '0.3rem',
-      fontWeight: '600',
-      color: darkMode ? '#bb86fc' : '#6c5ce7',
-    },
-    selectUser: {
-      marginBottom: '1.5rem',
-      padding: '0.6rem 1rem',
-      fontSize: '1rem',
-      borderRadius: '8px',
-      border: darkMode ? '1px solid #555' : '1px solid #ccc',
-      width: 320,
-      outline: 'none',
-      backgroundColor: darkMode ? '#2c2c2c' : '#fff',
-      color: darkMode ? '#e0e0e0' : '#2d3436',
-      transition: 'background-color 0.3s, border-color 0.3s, color 0.3s',
-    },
-    table: {
-      width: '100%',
-      borderCollapse: 'collapse',
-    },
-    thead: {
-      backgroundColor: darkMode ? '#3700b3' : '#6c5ce7',
-      color: 'white',
-      fontWeight: '600',
-    },
-    th: {
-      padding: '12px 15px',
-      textAlign: 'left',
-      borderBottom: darkMode ? '2px solid #555' : '2px solid #ddd',
-    },
-    td: {
-      padding: '12px 15px',
-      textAlign: 'left',
-      borderBottom: darkMode ? '1px solid #444' : '1px solid #eee',
-      verticalAlign: 'middle',
-      color: darkMode ? '#e0e0e0' : '#2d3436',
-    },
-    trHover: {
-      cursor: 'default',
-      backgroundColor: darkMode ? '#333366' : '#f1f8ff',
-      transition: 'background-color 0.3s',
-    },
-    loadingText: {
-      fontStyle: 'italic',
-      color: darkMode ? '#bbb' : '#555',
-      marginBottom: 12,
-      textAlign: 'center',
-    },
-    errorText: {
-      color: '#d63031',
-      fontWeight: '600',
-      marginBottom: 12,
-      textAlign: 'center',
-    },
-    noData: {
-      textAlign: 'center',
-      color: darkMode ? '#888' : '#999',
-      fontStyle: 'italic',
-      padding: '20px 0',
-    },
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken'); // or your token key
+    window.location.href = '/';  // Redirect to home page
   };
 
   return (
-    <div style={styles.container}>
-      <button
-        style={styles.toggleDark}
-        onClick={() => setDarkMode(prev => !prev)}
-        aria-label="Toggle dark mode"
-      >
-        {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
-      </button>
-
-      <h1 style={styles.title}>Admin Dashboard</h1>
+    <div className={`min-h-screen p-4 sm:p-8 font-sans transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-gray-200' : 'bg-gray-100 text-gray-900'}`}>
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-purple-600 dark:text-purple-400">Admin Dashboard</h1>
+        <div className="flex flex-col sm:flex-row items-center gap-3">
+          <button
+            onClick={() => setDarkMode(prev => !prev)}
+            aria-label="Toggle dark mode"
+            className="px-4 py-2 rounded-md font-semibold border-2 border-purple-600 dark:border-purple-400 text-purple-600 dark:text-purple-400 hover:bg-purple-600 hover:text-white dark:hover:bg-purple-400 dark:hover:text-gray-900 transition"
+          >
+            {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
+          </button>
+          <button
+            onClick={handleLogout}
+            aria-label="Logout"
+            className="px-4 py-2 rounded-md font-semibold border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white transition"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
 
       {/* Users Section */}
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>Users</h2>
-        {loadingUsers && <p style={styles.loadingText}>Loading users...</p>}
-        {errorUsers && <p style={styles.errorText}>{errorUsers}</p>}
+      <section className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sm:p-6 mb-10 transition-colors duration-300 max-w-full overflow-x-auto">
+        <h2 className="text-xl sm:text-2xl font-semibold text-purple-600 dark:text-purple-400 mb-4 border-b-4 border-purple-600 dark:border-purple-400 pb-2">
+          Users
+        </h2>
+
+        {loadingUsers && <p className="italic text-gray-500 dark:text-gray-400 mb-4">Loading users...</p>}
+        {errorUsers && <p className="text-red-600 dark:text-red-400 mb-4">{errorUsers}</p>}
+
         {!loadingUsers && !errorUsers && (
           <>
             <select
-              style={styles.selectUser}
               value={selectedUserId}
               onChange={(e) => setSelectedUserId(e.target.value)}
+              className="mb-6 w-full max-w-xs p-2 border rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-600 dark:focus:ring-purple-400 transition"
             >
               <option value="all">All Users</option>
               {users.map(user => (
@@ -215,32 +120,32 @@ const AdminDashboard = () => {
               ))}
             </select>
 
-            <table style={styles.table}>
-              <thead style={styles.thead}>
+            <table className="w-full table-auto border-collapse text-left text-sm min-w-[600px]">
+              <thead className="bg-purple-600 text-white">
                 <tr>
-                  <th style={styles.th}>ID</th>
-                  <th style={styles.th}>Name</th>
-                  <th style={styles.th}>Email</th>
-                  <th style={styles.th}>Role</th>
+                  <th className="p-3 border border-purple-700">ID</th>
+                  <th className="p-3 border border-purple-700">Name</th>
+                  <th className="p-3 border border-purple-700">Email</th>
+                  <th className="p-3 border border-purple-700">Role</th>
                 </tr>
               </thead>
               <tbody>
                 {users.length === 0 ? (
                   <tr>
-                    <td colSpan="4" style={styles.noData}>No users found.</td>
+                    <td colSpan="4" className="p-4 text-center text-gray-500 dark:text-gray-400 italic">
+                      No users found.
+                    </td>
                   </tr>
                 ) : (
                   users.map(user => (
                     <tr
                       key={user.id}
-                      style={{ cursor: 'default' }}
-                      onMouseEnter={e => e.currentTarget.style.backgroundColor = styles.trHover.backgroundColor}
-                      onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}
+                      className="hover:bg-purple-100 dark:hover:bg-purple-900 cursor-default transition-colors"
                     >
-                      <td style={styles.td}>{user.id}</td>
-                      <td style={styles.td}>{user.name || '—'}</td>
-                      <td style={styles.td}>{user.email || '—'}</td>
-                      <td style={styles.td}>{user.role || '—'}</td>
+                      <td className="p-3 border border-gray-300 dark:border-gray-700">{user.id}</td>
+                      <td className="p-3 border border-gray-300 dark:border-gray-700">{user.name || '—'}</td>
+                      <td className="p-3 border border-gray-300 dark:border-gray-700">{user.email || '—'}</td>
+                      <td className="p-3 border border-gray-300 dark:border-gray-700">{user.role || '—'}</td>
                     </tr>
                   ))
                 )}
@@ -251,26 +156,30 @@ const AdminDashboard = () => {
       </section>
 
       {/* Transactions Section */}
-      <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>Transactions</h2>
-        {loadingTransactions && <p style={styles.loadingText}>Loading transactions...</p>}
-        {errorTransactions && <p style={styles.errorText}>{errorTransactions}</p>}
+      <section className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sm:p-6 transition-colors duration-300 max-w-full overflow-x-auto">
+        <h2 className="text-xl sm:text-2xl font-semibold text-purple-600 dark:text-purple-400 mb-4 border-b-4 border-purple-600 dark:border-purple-400 pb-2">
+          Transactions
+        </h2>
+
+        {loadingTransactions && <p className="italic text-gray-500 dark:text-gray-400 mb-4">Loading transactions...</p>}
+        {errorTransactions && <p className="text-red-600 dark:text-red-400 mb-4">{errorTransactions}</p>}
+
         {!loadingTransactions && !errorTransactions && (
-          <table style={styles.table}>
-            <thead style={styles.thead}>
+          <table className="w-full table-auto border-collapse text-left text-sm min-w-[700px]">
+            <thead className="bg-purple-600 text-white">
               <tr>
-                <th style={styles.th}>ID</th>
-                <th style={styles.th}>Type</th>
-                <th style={styles.th}>Description</th>
-                <th style={styles.th}>Amount</th>
-                <th style={styles.th}>User ID</th>
-                <th style={styles.th}>Time Of Entry</th>
+                <th className="p-3 border border-purple-700">ID</th>
+                <th className="p-3 border border-purple-700">Type</th>
+                <th className="p-3 border border-purple-700">Description</th>
+                <th className="p-3 border border-purple-700">Amount</th>
+                <th className="p-3 border border-purple-700">User ID</th>
+                <th className="p-3 border border-purple-700">Time Of Entry</th>
               </tr>
             </thead>
             <tbody>
               {transactions.length === 0 ? (
                 <tr>
-                  <td colSpan="6" style={styles.noData}>
+                  <td colSpan="6" className="p-4 text-center text-gray-500 dark:text-gray-400 italic">
                     No transactions found for this user.
                   </td>
                 </tr>
@@ -278,16 +187,14 @@ const AdminDashboard = () => {
                 transactions.map(tx => (
                   <tr
                     key={tx.id}
-                    style={{ cursor: 'default' }}
-                    onMouseEnter={e => e.currentTarget.style.backgroundColor = styles.trHover.backgroundColor}
-                    onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}
+                    className="hover:bg-purple-100 dark:hover:bg-purple-900 cursor-default transition-colors"
                   >
-                    <td style={styles.td}>{tx.id}</td>
-                    <td style={styles.td}>{tx.type}</td>
-                    <td style={styles.td}>{tx.description}</td>
-                    <td style={styles.td}>{tx.amount}</td>
-                    <td style={styles.td}>{tx.userId ?? tx.user_id ?? '—'}</td>
-                    <td style={styles.td}>{formatMySQLTimestamp(tx.timeOfEntry ?? tx.createdAt)}</td>
+                    <td className="p-3 border border-gray-300 dark:border-gray-700">{tx.id}</td>
+                    <td className="p-3 border border-gray-300 dark:border-gray-700">{tx.type}</td>
+                    <td className="p-3 border border-gray-300 dark:border-gray-700">{tx.description}</td>
+                    <td className="p-3 border border-gray-300 dark:border-gray-700">{tx.amount}</td>
+                    <td className="p-3 border border-gray-300 dark:border-gray-700">{tx.userId ?? tx.user_id ?? '—'}</td>
+                    <td className="p-3 border border-gray-300 dark:border-gray-700">{formatMySQLTimestamp(tx.timeOfEntry ?? tx.createdAt)}</td>
                   </tr>
                 ))
               )}
@@ -300,4 +207,4 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-//Grish Pradhan
+//grish

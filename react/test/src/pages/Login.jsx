@@ -76,12 +76,12 @@ function Login() {
         className={`relative flex flex-col gap-8 w-full max-w-2xl p-12 rounded-2xl shadow-xl transition-colors duration-300 ${
           darkMode ? 'bg-[#1e1e1e] shadow-[#bb86fc]/50' : 'bg-white shadow-[#6c5ce7]/30'
         }`}
-        style={{ paddingTop: '5.5rem' }} // overlap hatauna padding-top
+        style={{ paddingTop: '5.5rem' }} // padding for dark mode toggle button space
       >
-        {/* Dark Mode Toggle ko lagi */}
+        {/* Dark Mode Toggle Button */}
         <button
           type="button"
-          onClick={() => setDarkMode(prev => !prev)}
+          onClick={() => setDarkMode((prev) => !prev)}
           aria-label="Toggle dark mode"
           className={`absolute top-6 right-6 px-5 py-2 rounded-md font-semibold cursor-pointer
             transition-colors duration-300
@@ -157,4 +157,3 @@ function Login() {
 }
 
 export default Login;
-//Grish Pradhan

@@ -10,57 +10,44 @@ const Homepage = () => {
   }, [darkMode]);
 
   return (
-    <div
-      className={`min-h-screen transition-colors duration-300 ${
-        darkMode ? 'bg-[#121212] text-[#e0e0e0]' : 'bg-[#f5f6fa] text-[#2d3436]'
-      }`}
-    >
-      {/* Container ko padding */}
-      <div className="max-w-6xl mx-auto px-6 pt-6">
-        {/* dark mode toggle ko lagi */}
+    <div className={`flex flex-col min-h-screen ${darkMode ? 'bg-[#121212] text-[#ccc]' : 'bg-[#f5f6fa] text-[#2d3436]'}`}>
+      <div className="w-full max-w-6xl mx-auto px-6 pt-6 flex-grow flex flex-col">
+        {/* Dark Mode Toggle */}
         <div className="flex justify-end mb-6">
           <button
-            type="button"
-            onClick={() => setDarkMode((prev) => !prev)}
+            onClick={() => setDarkMode(prev => !prev)}
             aria-label="Toggle dark mode"
-            className={`px-4 py-2 rounded-md font-semibold cursor-pointer transition-colors duration-300
-              focus:outline-none focus:ring-2 focus:ring-offset-1 ${
-                darkMode
-                  ? 'bg-transparent border border-[#bb86fc] text-[#e0e0e0] hover:bg-[#bb86fc] hover:text-[#121212] focus:ring-[#bb86fc]'
-                  : 'bg-transparent border border-[#6c5ce7] text-[#2d3436] hover:bg-[#6c5ce7] hover:text-white focus:ring-[#6c5ce7]'
-              }
-            `}
+            className={`px-4 py-2 rounded-md font-semibold transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-offset-1 ${
+              darkMode
+                ? 'bg-transparent border border-[#bb86fc] text-[#ccc] hover:bg-[#bb86fc] hover:text-[#121212] focus:ring-[#bb86fc]'
+                : 'bg-transparent border border-[#6c5ce7] text-[#2d3436] hover:bg-[#6c5ce7] hover:text-white focus:ring-[#6c5ce7]'
+            }`}
           >
             {darkMode ? '🌞 Light Mode' : '🌙 Dark Mode'}
           </button>
         </div>
 
-        {/* main section */}
-        <section className="text-center px-4 py-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-purple-600 transition-colors duration-300">
+        {/* Hero Section */}
+        <section className="flex-1 flex flex-col items-center justify-center text-center py-12 px-4">
+          <h1 className={`text-4xl md:text-5xl font-extrabold mb-4 ${darkMode ? 'text-[#bb86fc]' : 'text-[#3f3d56]'}`}>
             Master Your Money, The Smart Way
           </h1>
-          <p className="mt-4 text-lg max-w-2xl mx-auto transition-colors duration-300">
-            Welcome to BudgetMate – Your all-in-one personal finance dashboard. Track expenses, create budgets, and gain full control of your financial life.
+          <p className={`text-lg max-w-2xl mx-auto mb-8 ${darkMode ? 'text-[#ccc]' : 'text-[#555]'}`}>
+            Welcome to <strong>BudgetMate</strong> – Your all-in-one personal finance dashboard.
+            Track expenses, create budgets, and gain full control of your financial life.
           </p>
-          <div className="mt-8 flex justify-center gap-4">
-            <Link
-              to="/login"
-              className="bg-purple-600 text-white px-6 py-3 rounded font-semibold shadow-md hover:bg-purple-700 transition"
-            >
+          <div className="flex justify-center gap-4 flex-wrap">
+            <Link to="/login" className="bg-purple-600 text-white px-6 py-3 rounded-lg font-medium shadow hover:bg-purple-700 transition">
               Login
             </Link>
-            <Link
-              to="/register"
-              className="bg-green-500 text-white px-6 py-3 rounded font-semibold shadow-md hover:bg-green-600 transition"
-            >
+            <Link to="/register" className="bg-green-500 text-white px-6 py-3 rounded-lg font-medium shadow hover:bg-green-600 transition">
               Get Started
             </Link>
           </div>
         </section>
 
-        {/* features section */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-8 py-16">
+        {/* Features Section */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 md:px-8 py-16">
           {[
             {
               title: '📊 Real-Time Insights',
@@ -81,28 +68,25 @@ const Homepage = () => {
           ].map(({ title, desc }) => (
             <div
               key={title}
-              className={`rounded-xl shadow-md p-6 text-center transition-colors duration-300 ${
-                darkMode ? 'bg-[#1e1e1e] shadow-[#bb86fc]/20' : 'bg-white shadow-[#6c5ce7]/20'
+              className={`rounded-xl p-6 text-center shadow-md transition-colors duration-300 ${
+                darkMode ? 'bg-[#1e1e1e] shadow-[#bb86fc]/20' : 'bg-white shadow-[#6c5ce7]/10'
               }`}
             >
-              <h3 className="text-xl font-bold text-purple-600 mb-2">{title}</h3>
-              <p>{desc}</p>
+              <h3 className={`text-xl font-bold mb-2 ${darkMode ? 'text-[#bb86fc]' : 'text-[#3f3d56]'}`}>
+                {title}
+              </h3>
+              <p className={`${darkMode ? 'text-[#ccc]' : 'text-[#555]'}`}>{desc}</p>
             </div>
           ))}
         </section>
-
-        {/* for footer */}
-        <footer
-          className={`text-center py-6 text-sm transition-colors duration-300 ${
-            darkMode ? 'bg-[#2a2a2a] text-gray-300' : 'bg-white text-gray-500'
-          }`}
-        >
-          &copy; 2025 BudgetMate. Designed with 💜 for smarter finance.
-        </footer>
       </div>
+
+      {/* Footer */}
+      <footer className={`text-center py-6 text-sm ${darkMode ? 'bg-[#2a2a2a] text-[#aaa]' : 'bg-white text-[#888]'}`}>
+        &copy; 2025 BudgetMate. Designed with 💜 for smarter finance.
+      </footer>
     </div>
   );
 };
 
 export default Homepage;
-//Grish Pradhan
